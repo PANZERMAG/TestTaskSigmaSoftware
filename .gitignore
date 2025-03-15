@@ -1,0 +1,12 @@
+﻿.idea
+
+frontend/.vscode
+frontend/node_modules
+
+TestTask/bin
+TestTask/obj
+TestTask/appsettings.json
+TestTask/appsettings.Development.json
+
+
+
