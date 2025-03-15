@@ -13,7 +13,7 @@
       :class="{
         'drag-over': isDragging,
         'has-preview': hasPreview && !isDragging,
-        'error': error
+        error: error,
       }"
       @click="triggerFileInput"
     >
@@ -66,11 +66,11 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 const props = defineProps({
   files: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   multiple: {
     type: Boolean,
-    default: false
+    default: false,
   },
   maxSize: {
     type: Number,
@@ -86,8 +86,8 @@ const props = defineProps({
   },
   error: {
     type: String,
-    default: ''
-  }
+    default: '',
+  },
 })
 
 const emit = defineEmits(['update:files', 'upload-error'])
@@ -102,13 +102,17 @@ let dragCounter = 0
 const hasPreview = computed(() => !!previewUrl.value)
 
 // Watch for changes in the files prop
-watch(() => props.files, (newFiles) => {
-  if (newFiles && newFiles.length > 0) {
-    updatePreview(newFiles[0])
-  } else {
-    previewUrl.value = ''
-  }
-}, { immediate: true, deep: true })
+watch(
+  () => props.files,
+  (newFiles) => {
+    if (newFiles && newFiles.length > 0) {
+      updatePreview(newFiles[0])
+    } else {
+      previewUrl.value = ''
+    }
+  },
+  { immediate: true, deep: true },
+)
 
 function updatePreview(file) {
   if (file) {
@@ -171,7 +175,7 @@ function handleDrop(event) {
     return
   }
 
-  processFile(files[0]) // Process only the first file
+  processFile(files[0])
 }
 
 // Process the uploaded file
@@ -202,12 +206,7 @@ function removeImage() {
   emit('update:files', [])
 }
 
-function handleFilesEvent() {
-  emit('update:files', props.files)
-}
-
 onMounted(() => {
-  // Initialize preview if files exist
   if (props.files && props.files.length > 0) {
     updatePreview(props.files[0])
   }
@@ -219,7 +218,6 @@ onMounted(() => {
     element.addEventListener('dragleave', handleDragLeave)
     element.addEventListener('drop', handleDrop)
 
-    // Add listeners to document for better reliability
     document.addEventListener('dragover', (e) => {
       e.preventDefault()
       e.stopPropagation()
